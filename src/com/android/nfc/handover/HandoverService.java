@@ -58,7 +58,6 @@ public class HandoverService extends Service implements HandoverTransfer.Callbac
     static final int MSG_PERIPHERAL_HANDOVER = 4;
     static final int MSG_PAUSE_POLLING = 5;
 
-
     static final String BUNDLE_TRANSFER = "transfer";
 
     static final String EXTRA_PERIPHERAL_DEVICE = "device";
@@ -284,6 +283,7 @@ public class HandoverService extends Service implements HandoverTransfer.Callbac
             mHandler.sendMessageDelayed(
                     mHandler.obtainMessage(MSG_PAUSE_POLLING), PAUSE_DELAY_MILLIS);
         }
+
         if (mBluetoothAdapter.isEnabled()) {
             if (!mBluetoothPeripheralHandover.start()) {
                 mNfcAdapter.resumePolling();
@@ -549,6 +549,7 @@ public class HandoverService extends Service implements HandoverTransfer.Callbac
 
             // do this unconditionally as the polling could have been paused as we were removing
             // the message in the handler. It's a no-op if polling is already enabled.
+
             mNfcAdapter.resumePolling();
         }
 

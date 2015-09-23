@@ -27,7 +27,7 @@ import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 
 public class ForegroundUtils extends IProcessObserver.Stub {
-    static final boolean DBG = false;
+    static final boolean DBG = true;
     private final String TAG = "ForegroundUtils";
     private final IActivityManager mIActivityManager;
 

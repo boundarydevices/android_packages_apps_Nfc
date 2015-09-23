@@ -20,9 +20,15 @@ namespace android
 {
     extern jmethodID gCachedNfcManagerNotifyNdefMessageListeners;
     extern jmethodID gCachedNfcManagerNotifyTransactionListeners;
+    extern jmethodID gCachedNfcManagerNotifyConnectivityListeners;
+    extern jmethodID gCachedNfcManagerNotifyEmvcoMultiCardDetectedListeners;
     extern jmethodID gCachedNfcManagerNotifyLlcpLinkActivation;
     extern jmethodID gCachedNfcManagerNotifyLlcpLinkDeactivated;
     extern jmethodID gCachedNfcManagerNotifyLlcpFirstPacketReceived;
+    extern jmethodID gCachedNfcManagerNotifySeFieldActivated;
+    extern jmethodID gCachedNfcManagerNotifySeFieldDeactivated;
+    extern jmethodID gCachedNfcManagerNotifySeListenActivated;
+    extern jmethodID gCachedNfcManagerNotifySeListenDeactivated;
 
     /*
      * host-based card emulation
@@ -30,6 +36,9 @@ namespace android
     extern jmethodID gCachedNfcManagerNotifyHostEmuActivated;
     extern jmethodID gCachedNfcManagerNotifyHostEmuData;
     extern jmethodID gCachedNfcManagerNotifyHostEmuDeactivated;
+    extern jmethodID gCachedNfcManagerNotifySWPReaderRequested;
+    extern jmethodID gCachedNfcManagerNotifySWPReaderActivated;
+    extern jmethodID gCachedNfcManagerNotifySWPReaderDeActivated;
 
     extern const char* gNativeP2pDeviceClassName;
     extern const char* gNativeLlcpServiceSocketClassName;
@@ -37,4 +46,6 @@ namespace android
     extern const char* gNativeLlcpSocketClassName;
     extern const char* gNativeNfcTagClassName;
     extern const char* gNativeNfcManagerClassName;
+    extern const char* gNativeNfcSecureElementClassName;
+    extern const char* gNativeNfcAlaClassName;
 }

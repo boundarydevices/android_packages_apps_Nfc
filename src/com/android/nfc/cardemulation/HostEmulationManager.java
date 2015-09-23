@@ -13,7 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+ /*
+ *  The original Work has been changed by NXP Semiconductors.
+ *
+ *  Copyright (C) 2013-2014 NXP Semiconductors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 package com.android.nfc.cardemulation;
 
 import android.app.ActivityManager;
@@ -43,13 +60,17 @@ import java.util.ArrayList;
 
 public class HostEmulationManager {
     static final String TAG = "HostEmulationManager";
-    static final boolean DBG = false;
+    static final boolean DBG = true;
 
     static final int STATE_IDLE = 0;
     static final int STATE_W4_SELECT = 1;
     static final int STATE_W4_SERVICE = 2;
     static final int STATE_W4_DEACTIVATE = 3;
     static final int STATE_XFER = 4;
+
+    static final int SCREEN_STATE_OFF = 1;
+    static final int SCREEN_STATE_ON_LOCKED = 2;
+    static final int SCREEN_STATE_ON_UNLOCKED = 3;
 
     /** Minimum AID lenth as per ISO7816 */
     static final int MINIMUM_AID_LENGTH = 5;
@@ -97,11 +118,14 @@ public class HostEmulationManager {
     int mState;
     byte[] mSelectApdu;
 
+    int mScreenState;
+
     public HostEmulationManager(Context context, RegisteredAidCache aidCache) {
         mContext = context;
         mLock = new Object();
         mAidCache = aidCache;
         mState = STATE_IDLE;
+        mScreenState = SCREEN_STATE_ON_UNLOCKED;
         mKeyguard = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
     }
 
@@ -124,6 +148,10 @@ public class HostEmulationManager {
             }
          }
      }
+
+    public void setScreenState(int state) {
+        mScreenState = state;
+    }
 
     public void onHostEmulationActivated() {
         Log.d(TAG, "notifyHostEmulationActivated");
@@ -150,6 +178,10 @@ public class HostEmulationManager {
                 return;
             } else if (mState == STATE_W4_DEACTIVATE) {
                 Log.e(TAG, "Dropping APDU in STATE_W4_DECTIVATE");
+                return;
+            }
+            if (mScreenState == SCREEN_STATE_OFF) {
+                NfcService.getInstance().sendData(AID_NOT_FOUND);
                 return;
             }
             if (selectAid != null) {
@@ -274,7 +306,7 @@ public class HostEmulationManager {
             mActiveServiceName = null;
             unbindServiceIfNeededLocked();
             mState = STATE_W4_SELECT;
-
+//TODO: Check the impact on NfcService onSEDeactivated
             //close the TapAgainDialog
             Intent intent = new Intent(TapAgainDialog.ACTION_CLOSE);
             intent.setPackage("com.android.nfc");

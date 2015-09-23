@@ -20,7 +20,7 @@
 #pragma once
 #include "NfcJniUtil.h"
 #include "nfa_api.h"
-#include <libxml/parser.h>
+//#include <libxml/parser.h>
 #include <vector>
 #include <string>
 
@@ -289,7 +289,7 @@ private:
     ** Returns:         None.
     **
     *******************************************************************************/
-    void importProtocolRoute (xmlNodePtr& element, Database& database);
+    //void importProtocolRoute (xmlNodePtr& element, Database& database);
 
 
     /*******************************************************************************
@@ -303,6 +303,6 @@ private:
     ** Returns:         None.
     **
     *******************************************************************************/
-    void importTechnologyRoute (xmlNodePtr& element, Database& database);
+  //  void importTechnologyRoute (xmlNodePtr& element, Database& database);
 };
 

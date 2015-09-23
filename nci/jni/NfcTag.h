@@ -13,7 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/******************************************************************************
+ *
+ *  The original Work has been changed by NXP Semiconductors.
+ *
+ *  Copyright (C) 2013-2014 NXP Semiconductors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ ******************************************************************************/
 /*
  *  Tag-reading, tag-writing operations.
  */
@@ -37,8 +55,12 @@ public:
     int mTechHandles [MAX_NUM_TECHNOLOGY]; //array of tag handles according to NFC service
     int mTechLibNfcTypes [MAX_NUM_TECHNOLOGY]; //array of detailed tag types according to NFC service
     int mNumTechList; //current number of NFC technologies in the list
+    int mNumDiscNtf;
+    int mNumDiscTechList;
+    int mTechListIndex;
+    bool mNfcDisableinProgress;
 
-    /*******************************************************************************
+   /*******************************************************************************
     **
     ** Function:        NfcTag
     **
@@ -195,6 +217,16 @@ public:
     *******************************************************************************/
     void selectFirstTag ();
 
+    /*******************************************************************************
+    **
+    ** Function:        selectNextTag
+    **
+    ** Description:     When multiple tags are discovered, selects the Nex one to activate.
+    **
+    ** Returns:         None
+    **
+    *******************************************************************************/
+    void selectNextTag ();
 
     /*******************************************************************************
     **
@@ -218,6 +250,17 @@ public:
     **
     *******************************************************************************/
     bool isMifareUltralight ();
+
+    /*******************************************************************************
+    **
+    ** Function:        isMifareDESFire
+    **
+    ** Description:     Whether the currently activated tag is Mifare Ultralight.
+    **
+    ** Returns:         True if tag is Mifare Ultralight.
+    **
+    *******************************************************************************/
+    bool isMifareDESFire ();
 
 
     /*******************************************************************************
@@ -358,6 +401,16 @@ public:
     *******************************************************************************/
     bool isInfineonMyDMove ();
 
+    /*******************************************************************************
+    **
+    ** Function:        isEzLinkType
+    **
+    ** Description:     Whether the currently activated tag is isEzLinkType tag
+    **
+    ** Returns:         True if tag is isEzLinkType  tag.
+    **
+    *******************************************************************************/
+    bool isEzLinkType ();
 
     /*******************************************************************************
     **
@@ -372,6 +425,49 @@ public:
     bool isKovioType2Tag ();
 
 
+    /*******************************************************************************
+    **
+    ** Function:        isTypeBTag
+    **
+    ** Description:     Whether the currently activated tag is Type B.
+    **
+    ** Returns:         True if tag is Type B.
+    **
+    *******************************************************************************/
+    bool isTypeBTag ();
+
+    /*******************************************************************************
+    **
+    ** Function:        getTypeATagUID
+    **
+    ** Description:     Get the UID of TypeA Tag.
+    **
+    ** Returns:         UID in case of TypeA Tag otherwise NULL..
+    **
+    *******************************************************************************/
+    void getTypeATagUID(UINT8 **uid, UINT32 *len);
+
+    /*******************************************************************************
+    **
+    ** Function:        checkNextValidProtocol
+    **
+    ** Description:     When multiple tags are discovered, check next valid protocol
+    **
+    ** Returns:         id
+    **
+    *******************************************************************************/
+    int checkNextValidProtocol(void );
+
+    /*******************************************************************************
+    **
+    ** Function:        storeEzLinkType
+    **
+    ** Description:     stores Ez link tag activation parameters
+    **
+    ** Returns:         None
+    **
+    *******************************************************************************/
+    void storeEzlinkType();
 private:
     std::vector<int> mTechnologyTimeoutsTable;
     std::vector<int> mTechnologyDefaultTimeoutsTable;
@@ -560,4 +656,3 @@ private:
     *******************************************************************************/
     void calculateT1tMaxMessageSize (tNFA_ACTIVATED& activate);
 };
-

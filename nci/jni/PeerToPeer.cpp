@@ -13,7 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/*
+ *  The original Work has been changed by NXP Semiconductors.
+ *
+ *  Copyright (C) 2013-2014 NXP Semiconductors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 /*
  *  Communicate with a peer using NFC-DEP, LLCP, SNEP.
  */
@@ -40,6 +57,10 @@ namespace android
 {
     extern void nativeNfcTag_registerNdefTypeHandler ();
     extern void nativeNfcTag_deregisterNdefTypeHandler ();
+    extern int getScreenState();
+    extern void startRfDiscovery(bool isStart);
+    extern bool isDiscoveryStarted();
+    extern int gGeneralPowershutDown;
 }
 
 
@@ -473,6 +494,7 @@ bool PeerToPeer::deregisterServer (tJNI_HANDLE jniHandle)
     tNFA_STATUS     nfaStat = NFA_STATUS_FAILED;
     sp<P2pServer>   pSrv = NULL;
 
+    bool isDiscStopped = false;
     mMutex.lock();
     if ((pSrv = findServerLocked (jniHandle)) == NULL)
     {
@@ -481,6 +503,18 @@ bool PeerToPeer::deregisterServer (tJNI_HANDLE jniHandle)
         return (false);
     }
     mMutex.unlock();
+    if(isDiscoveryStarted())
+    {
+        isDiscStopped = true;
+        startRfDiscovery(false);
+    }
+
+    //Check if discovery  is started
+    if(isDiscoveryStarted())
+    {
+
+        startRfDiscovery(false);
+    }
 
     {
         // Server does not call NFA_P2pDisconnect(), so unblock the accept()
@@ -495,6 +529,15 @@ bool PeerToPeer::deregisterServer (tJNI_HANDLE jniHandle)
     }
 
     removeServer (jniHandle);
+
+    /*
+     * conditional check is added to avoid multiple dicovery cmds
+     * at the time of NFC OFF in progress
+     */
+    if((gGeneralPowershutDown != VEN_CFG_NFC_OFF_POWER_OFF) && isDiscStopped == true)
+    {
+        startRfDiscovery(true);
+    }
 
     ALOGD ("%s: exit", fn);
     return true;
@@ -535,7 +578,7 @@ bool PeerToPeer::createClient (tJNI_HANDLE jniHandle, UINT16 miu, UINT8 rw)
     }
     mMutex.unlock();
 
-    if (client == NULL)
+    if (client == NULL || i >=sMax)
     {
         ALOGE ("%s: fail", fn);
         return (false);

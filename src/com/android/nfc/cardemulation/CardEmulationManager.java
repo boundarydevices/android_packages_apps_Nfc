@@ -13,6 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ /*
+ *  The original Work has been changed by NXP Semiconductors.
+ *
+ *  Copyright (C) 2013-2014 NXP Semiconductors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */ 
 package com.android.nfc.cardemulation;
 
 import java.io.FileDescriptor;
@@ -48,7 +66,7 @@ import com.android.nfc.cardemulation.RegisteredServicesCache;
 public class CardEmulationManager implements RegisteredServicesCache.Callback,
         PreferredServices.Callback {
     static final String TAG = "CardEmulationManager";
-    static final boolean DBG = false;
+    static final boolean DBG = true;
 
     final RegisteredAidCache mAidCache;
     final RegisteredServicesCache mServiceCache;
@@ -57,10 +75,10 @@ public class CardEmulationManager implements RegisteredServicesCache.Callback,
     final Context mContext;
     final CardEmulationInterface mCardEmulationInterface;
 
-    public CardEmulationManager(Context context) {
+    public CardEmulationManager(Context context, AidRoutingManager aidRoutingManager) {
         mContext = context;
         mCardEmulationInterface = new CardEmulationInterface();
-        mAidCache = new RegisteredAidCache(context);
+        mAidCache = new RegisteredAidCache(context, aidRoutingManager);
         mHostEmulationManager = new HostEmulationManager(context, mAidCache);
         mServiceCache = new RegisteredServicesCache(context, this);
         mPreferredServices = new PreferredServices(context, mServiceCache, mAidCache, this);
@@ -294,7 +312,7 @@ public class CardEmulationManager implements RegisteredServicesCache.Callback,
                 throws RemoteException {
             NfcPermissions.validateUserId(userId);
             NfcPermissions.enforceAdminPermissions(mContext);
-            if (!isServiceRegistered(userId, service)) {
+            if (service != null && !isServiceRegistered(userId, service)) {
                 return false;
             }
             return mPreferredServices.setDefaultForNextTap(service);
@@ -361,7 +379,6 @@ public class CardEmulationManager implements RegisteredServicesCache.Callback,
             NfcPermissions.enforceUserPermissions(mContext);
             return mPreferredServices.unregisteredPreferredForegroundService(
                     Binder.getCallingUid());
-
         }
 
         @Override
@@ -381,4 +398,12 @@ public class CardEmulationManager implements RegisteredServicesCache.Callback,
         mAidCache.onPreferredForegroundServiceChanged(service);
         mHostEmulationManager.onPreferredForegroundServiceChanged(service);
     };
+    
+    public void setScreenState(int state) {
+        mHostEmulationManager.setScreenState(state);
+    }
+    
+    public void onRoutingTableChanged() {
+        mAidCache.onRoutingTableChanged();
+    }
 }

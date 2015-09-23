@@ -40,7 +40,7 @@ import android.util.Log;
 
 public class NfceeAccessControl {
     static final String TAG = "NfceeAccess";
-    static final boolean DBG = false;
+    static final boolean DBG = true;
 
     public static final String NFCEE_ACCESS_PATH = "/etc/nfcee_access.xml";
 

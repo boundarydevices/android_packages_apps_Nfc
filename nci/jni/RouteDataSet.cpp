@@ -19,7 +19,7 @@
  */
 #include "OverrideLog.h"
 #include "RouteDataSet.h"
-#include "libxml/xmlmemory.h"
+//#include "libxml/xmlmemory.h"
 #include <errno.h>
 #include <sys/stat.h>
 
@@ -122,7 +122,7 @@ bool RouteDataSet::initialize ()
     ALOGD ("%s: enter", fn);
     //check that the libxml2 version in use is compatible
     //with the version the software has been compiled with
-    LIBXML_TEST_VERSION
+    //LIBXML_TEST_VERSION
     ALOGD ("%s: exit; return=true", fn);
     return true;
 }
@@ -167,6 +167,7 @@ bool RouteDataSet::import ()
     static const char fn [] = "RouteDataSet::import";
     ALOGD ("%s: enter", fn);
     bool retval = false;
+#if 0    
     xmlDocPtr doc;
     xmlNodePtr node1;
     std::string strFilename(bcm_nfc_location);
@@ -232,6 +233,7 @@ TheEnd:
     xmlFreeDoc (doc);
     xmlCleanupParser ();
     ALOGD ("%s: exit; return=%u", fn, retval);
+#endif
     return retval;
 }
 
@@ -318,6 +320,7 @@ bool RouteDataSet::loadFromFile (std::string& routesXml)
 }
 
 
+#if 0
 
 
 /*******************************************************************************
@@ -460,7 +463,7 @@ void RouteDataSet::importTechnologyRoute (xmlNodePtr& element, Database& databas
     }
     database.push_back (data);
 }
-
+#endif
 
 /*******************************************************************************
 **

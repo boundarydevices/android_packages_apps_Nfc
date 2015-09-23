@@ -20,7 +20,7 @@ LOCAL_JNI_SHARED_LIBRARIES  := libnfc_jni
 
 LOCAL_PROGUARD_ENABLED := disabled
 
-include $(BUILD_PACKAGE)
+#include $(BUILD_PACKAGE)
 
 ########################################
 # NCI Configuration

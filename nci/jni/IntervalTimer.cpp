@@ -80,7 +80,7 @@ void IntervalTimer::kill()
 
 bool IntervalTimer::create(TIMER_FUNC cb)
 {
-    struct sigevent se;
+    struct sigevent se = {0};
     int stat = 0;
 
     /*

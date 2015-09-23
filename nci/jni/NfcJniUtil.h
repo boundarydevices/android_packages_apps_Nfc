@@ -13,7 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/******************************************************************************
+ *
+ *  The original Work has been changed by NXP Semiconductors.
+ *
+ *  Copyright (C) 2013-2014 NXP Semiconductors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ ******************************************************************************/
 #pragma once
 #undef LOG_TAG
 #define LOG_TAG "BrcmNfcJni"
@@ -85,12 +103,18 @@
 #define TARGET_TYPE_MIFARE_UL             9
 #define TARGET_TYPE_KOVIO_BARCODE         10
 
+/* Setting VEN_CFG  */
+#define VEN_CFG_NFC_ON_POWER_ON           3
+#define VEN_CFG_NFC_OFF_POWER_OFF         2
 
 //define a few NXP error codes that NFC service expects;
 //see external/libnfc-nxp/src/phLibNfcStatus.h;
 //see external/libnfc-nxp/inc/phNfcStatus.h
 #define NFCSTATUS_SUCCESS (0x0000)
 #define NFCSTATUS_FAILED (0x00FF)
+
+//default general trasceive timeout in millisecond
+#define DEFAULT_GENERAL_TRANS_TIMEOUT  2000
 
 struct nfc_jni_native_data
 {
@@ -166,4 +190,6 @@ namespace android
     int register_com_android_nfc_NativeLlcpConnectionlessSocket (JNIEnv *e);
     int register_com_android_nfc_NativeLlcpServiceSocket (JNIEnv *e);
     int register_com_android_nfc_NativeLlcpSocket (JNIEnv *e);
+    int register_com_android_nfc_NativeNfcSecureElement (JNIEnv *e);
+    int register_com_android_nfc_NativeNfcAla(JNIEnv *e);
 } // namespace android

@@ -249,7 +249,7 @@ public class PreferredServices implements com.android.nfc.ForegroundUtils.Callba
                 for (String aid : otherAids) {
                     RegisteredAidCache.AidResolveInfo resolveInfo = mAidCache.resolveAid(aid);
                     if (CardEmulation.CATEGORY_PAYMENT.equals(resolveInfo.category) &&
-                            paymentServiceInfo.equals(resolveInfo.defaultService)) {
+                            paymentServiceInfo.equals(resolveInfo.defaultService) ) {
                         Log.d(TAG, "AID " + aid + " is handled by the default payment app, " +
                                 "and the user has not allowed payments to be overridden.");
                         return false;
