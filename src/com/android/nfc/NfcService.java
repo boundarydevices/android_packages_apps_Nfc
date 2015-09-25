@@ -3565,10 +3565,14 @@ public class NfcService implements DeviceHostListener {
                     } else if (screenState == ScreenStateHelper.SCREEN_STATE_ON_LOCKED && mScreenState == ScreenStateHelper.SCREEN_STATE_ON_LOCKED) {
                         return;
                     }
-                } else if (action.equals(Intent.ACTION_USER_PRESENT) &&
-                         mScreenState != ScreenStateHelper.SCREEN_STATE_ON_UNLOCKED) {
-                    screenState = ScreenStateHelper.SCREEN_STATE_ON_UNLOCKED;
-                    mDeviceHost.doSetScreenState(ScreenStateHelper.SCREEN_STATE_ON_UNLOCKED);
+                } else if (action.equals(Intent.ACTION_USER_PRESENT)) {
+                    if (mScreenState != ScreenStateHelper.SCREEN_STATE_ON_UNLOCKED) {
+                        screenState = ScreenStateHelper.SCREEN_STATE_ON_UNLOCKED;
+                        mDeviceHost.doSetScreenState(ScreenStateHelper.SCREEN_STATE_ON_UNLOCKED);
+                    } else {
+                        /* received USER_PRESENT but screen already ON */
+                        return;
+                    }
                 }
                 mCardEmulationManager.setScreenState(screenState);
                 new ApplyRoutingTask().execute(Integer.valueOf(screenState));
